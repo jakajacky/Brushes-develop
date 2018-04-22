@@ -73,7 +73,7 @@ static NSString *WDAttachmentNotification = @"WDAttachmentNotification";
     
     
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Select", @"Select")
-                                                                 style:UIBarButtonItemStyleBordered
+                                                                 style:UIBarButtonItemStylePlain
                                                                 target:self
                                                                 action:@selector(startEditing:)];
     self.navigationItem.leftBarButtonItem = leftItem;
@@ -666,28 +666,21 @@ static NSString *WDAttachmentNotification = @"WDAttachmentNotification";
     NSString *action = (selectedPaintings_.count) == 1 ? NSLocalizedString(@"Delete Painting", @"Delete Painting") :
                             [NSString stringWithFormat:format, selectedPaintings_.count];
     if (self.runningOnPhone) {
-        deleteSheet_ = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
-        deleteSheet_.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-        
-        deleteSheet_.destructiveButtonIndex = [deleteSheet_ addButtonWithTitle:action];
-        deleteSheet_.cancelButtonIndex = [deleteSheet_ addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel")];
+        deleteSheet_ = [[UIAlertController alloc] init];
+        deleteSheet_.preferredStyle = UIAlertControllerStyleActionSheet;
+        UIAlertAction *act = [UIAlertAction actionWithTitle:action style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            [self deleteSelectedPaintings];
+            deleteSheet_ = nil;
+        }];
+        UIAlertAction *act1 = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            deleteSheet_ = nil;
+        }];
     } else {
         deleteSheet_ = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@""
                                      destructiveButtonTitle:action otherButtonTitles:nil];
     }
     
     [deleteSheet_ showFromBarButtonItem:sender animated:YES];
-}
-     
- - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
-{
-    if (actionSheet == deleteSheet_) {
-        if (buttonIndex == actionSheet.destructiveButtonIndex) {
-            [self deleteSelectedPaintings];
-        }
-    }
-    
-    deleteSheet_ = nil;
 }
 
 - (void) setEditing:(BOOL)editing animated:(BOOL)animated

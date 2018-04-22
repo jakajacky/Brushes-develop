@@ -29,7 +29,7 @@
 @interface WDBrowserController : UIViewController <UIScrollViewDelegate, UIActionSheetDelegate, UIPopoverControllerDelegate, WDGridViewDataSource,
                                                     DBRestClientDelegate, MFMailComposeViewControllerDelegate, WDImportControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIAlertViewDelegate>
 {
-    UIActionSheet           *deleteSheet_;
+    UIAlertController           *deleteSheet_;
     
     NSMutableArray          *toolbarItems_;
     NSMutableArray          *editingToolbarItems_;
